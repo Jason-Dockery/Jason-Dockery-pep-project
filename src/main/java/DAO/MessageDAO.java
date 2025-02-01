@@ -76,43 +76,39 @@ public class MessageDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return getMessageById(message_id);
     }
-
+    //+
     public Message deleteMessageById(int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "DELETE * FROM message WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, message_id);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Message message = new Message(
-                    rs.getInt("message_id"),
-                    rs.getInt("posted_by"),
-                    rs.getString("message_text"),
-                    rs.getInt("time_posted_epoch"));
-                    return message;
-                }
+            int rowsAffected = ps.executeUpdate();
+            if(rowsAffected == 0){
+                return getMessageById(message_id);
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return getMessageById(message_id);
     }
-
+    //+
     public Message updateMessageById(Message message, int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try {
-            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, message.getPosted_by());
-            ps.setString(2, message.getMessage_text());
-            ps.setLong(3, message.getTime_posted_epoch());
-            ps.executeUpdate();
+            ps.setString(1, message.getMessage_text());
+            int rowsAffected = ps.executeUpdate();
+            if(rowsAffected == 0){
+                return null;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return updateMessageById(message, message_id);
+        return getMessageById(message_id);
     }
 
     public List<Message> getAllMessagesByUser(int posted_by){

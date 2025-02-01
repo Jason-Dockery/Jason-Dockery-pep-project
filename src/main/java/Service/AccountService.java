@@ -15,29 +15,26 @@ public class AccountService {
     }
 
      public Account accountLogin (String username){
-    //     // edit more to fit needs of readme.md ##2
-    //     String username = a
-    //             // or ;account
-    //     if(!account.username.isBlank() && !account.password.isBlank()){
-    //         return accountDAO.accountLogin(username);
-    //     }
-             return accountDAO.addUser(null);
+        // edit more to fit needs of readme.md ##2
+        if(accountDAO.accountLogin(username)){
+            // Account userAccount = accountDAO.accountLogin(username);
+            // return userAccount;
+            // fix this
+        }
+             return null;
     }
-// or ;account account.password.length() > 3 && // edit more to fit needs of readme.md ##1
+// or ;account // !accountDAO.accountLogin(account.getUsername()) edit more to fit needs of readme.md ##1
     public Account addUser (Account account){
         // String username = account.getUsername();
         // String password = account.getPassword();
         
-        if(account.getUsername().length() > 0 && account.getPassword().length() >= 4 && !accountDAO.accountLogin(account.getUsername())){
-            return null;
-        }
-        // if(){
-        //     return null;
-        // }
-        // if(!accountDAO.accountLogin(username)){
-        //     Account addedUserAccount = accountDAO.addUser(account);
-        //     return addedUserAccount;
-        // }
+        if(account.getUsername().length() > 0 && 
+           account.getPassword().length() >= 4 && 
+           account.username != account.getUsername() //fix this
+        ){
+            Account addedUserAccount = accountDAO.addUser(account);
+            return addedUserAccount;
+        } else
             return null;
     }
 }

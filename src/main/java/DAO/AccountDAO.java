@@ -36,12 +36,15 @@ public class AccountDAO {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
-            ps.executeUpdate();
-            ResultSet pkrs = ps.getGeneratedKeys();
-            if(pkrs.next()){
-                int generated_account_id = (int) pkrs.getLong(1);
-                return new Account(generated_account_id, account.getUsername(), account.getPassword());
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0){
+                ResultSet pkrs = ps.getGeneratedKeys();
+                if(pkrs.next()){
+                    int generated_account_id = (int) pkrs.getLong(1);
+                    return new Account(generated_account_id, account.getUsername(), account.getPassword());
+                }
             }
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
