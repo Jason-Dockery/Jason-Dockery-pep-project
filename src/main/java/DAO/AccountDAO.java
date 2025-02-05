@@ -15,7 +15,7 @@ public class AccountDAO {
         Connection conn = ConnectionUtil.getConnection();
 
         try {
-            String sql = "SELECT username FROM Account WHERE username = ?";
+            String sql = "SELECT username FROM account WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -32,7 +32,7 @@ public class AccountDAO {
         Connection conn = ConnectionUtil.getConnection();
 
         try {
-            String sql = "INSERT INTO Account (username, password) VALUES (?, ?)";
+            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());

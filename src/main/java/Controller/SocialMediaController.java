@@ -22,7 +22,7 @@ public class SocialMediaController {
     MessageService messageService;
     AccountService accountService;
 
-    public SocialMediaController(){
+    public SocialMediaController(MessageService messageService, AccountService accountService){
         this.messageService = new MessageService();
         this.accountService = new AccountService();
     }
@@ -75,7 +75,7 @@ public class SocialMediaController {
         try{
             ObjectMapper om = new ObjectMapper();
             Account account = om.readValue(context.body(), Account.class);
-            Account userAccount = accountService.accountLogin(account.username);
+            Account userAccount = accountService.accountLogin(account.getUsername());
             if(userAccount != null){
                 context.json(userAccount);
                 context.status(200);
@@ -107,12 +107,16 @@ public class SocialMediaController {
         context.status(200);
         }
 
-    private void getMessageByIdHandler(Context context) {
-        //ObjectMapper om = new ObjectMapper();
-        //Message message = om.readValue(context.body(), Message.class);
+    private void getMessageByIdHandler(Context context) throws JsonProcessingException{
+        // ObjectMapper om = new ObjectMapper();
+        // Message message = om.readValue(context.body(), Message.class);
         int message_id = Integer.parseInt(context.pathParam("message_id"));
-        context.json(messageService.getMessageById(message_id)); //consider just message or message, message_id
-        context.status(200);
+        Message getMessage = messageService.getMessageById(message_id);//consider just message or message, message_id
+        if(getMessage != null){
+            context.json(getMessage);
+            context.status(200);
+        }
+            context.status(200);
         }
 
     //+
@@ -135,7 +139,8 @@ public class SocialMediaController {
             ObjectMapper om = new ObjectMapper();
             Message message = om.readValue(context.body(), Message.class);
             int message_id = Integer.parseInt(context.pathParam("message_id"));
-            Message updatedMessage = messageService.updateMessageById(message, message_id); //consider just message or message, message_id
+            int posted_by = Integer.parseInt(context.pathParam("message_id"));
+            Message updatedMessage = messageService.updateMessageById(message, message_id, posted_by); //consider just message or message, message_id
             if(updatedMessage != null){
                 context.json(updatedMessage);
                 context.status(200);
@@ -146,9 +151,12 @@ public class SocialMediaController {
         }
     }
 
-    private void getAllMessagesByUserHandler(Context context) {
+    private void getAllMessagesByUserHandler(Context context) throws JsonProcessingException{
+        ObjectMapper om = new ObjectMapper();
+        Message message = om.readValue(context.body(), Message.class);
+        //int message_id = Integer.parseInt(context.pathParam("message_id"));
         int posted_by = Integer.parseInt(context.pathParam("posted_by"));
-        context.json(messageService.getAllMessagesByUser(messageService.getMessageById(posted_by), posted_by));
+        //context.json(messageService.getAllMessagesByUser());
         context.status(200);
     }
 }

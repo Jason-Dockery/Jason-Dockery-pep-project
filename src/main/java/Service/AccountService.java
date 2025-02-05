@@ -1,5 +1,7 @@
 package Service;
 
+import static org.mockito.ArgumentMatchers.booleanThat;
+
 import DAO.AccountDAO;
 import Model.Account;
 
@@ -16,9 +18,8 @@ public class AccountService {
 
      public Account accountLogin (String username){
         // edit more to fit needs of readme.md ##2
-        if(accountDAO.accountLogin(username)){
-            // Account userAccount = accountDAO.accountLogin(username);
-            // return userAccount;
+        if(accountDAO.accountLogin(username) == true){
+            return accountLogin(username);
             // fix this
         }
              return null;
@@ -30,7 +31,7 @@ public class AccountService {
         
         if(account.getUsername().length() > 0 && 
            account.getPassword().length() >= 4 && 
-           account.username != account.getUsername() //fix this
+           account.getUsername() == account.username //fix this
         ){
             Account addedUserAccount = accountDAO.addUser(account);
             return addedUserAccount;

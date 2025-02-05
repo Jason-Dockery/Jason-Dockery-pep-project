@@ -15,6 +15,7 @@ import Util.ConnectionUtil;
 public class MessageDAO {
     
     public Message insertMessage(Message message){
+        int message_id = 0;
         Connection conn = ConnectionUtil.getConnection();
         try {
             String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
@@ -24,17 +25,16 @@ public class MessageDAO {
             ps.setLong(3, message.getTime_posted_epoch());
             ps.executeUpdate();
             ResultSet pkrs = ps.getGeneratedKeys();
-            if(pkrs.next()){
-                int generated_message_id = pkrs.getInt(1);
-                return new Message (generated_message_id, 
-                                    message.getPosted_by(), 
-                                    message.getMessage_text(), 
-                                    message.getTime_posted_epoch());
-            }
+            pkrs.next();
+            message_id = pkrs.getInt("message_id");
+            message.setMessage_id(message_id);
+
+            return message;
+        
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return message;
+        return null;
     }
 
     public List<Message> getAllMessages(){
@@ -61,7 +61,7 @@ public class MessageDAO {
     public Message getMessageById(int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try {
-            String sql = "SELECT * FROM message WHERE message_id = ?";
+            String sql = "SELECT message_text FROM message WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, message_id);
             ResultSet rs = ps.executeQuery();
@@ -82,7 +82,7 @@ public class MessageDAO {
     public Message deleteMessageById(int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try {
-            String sql = "DELETE * FROM message WHERE message_id = ?";
+            String sql = "DELETE message_text FROM message WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, message_id);
             int rowsAffected = ps.executeUpdate();
@@ -98,7 +98,7 @@ public class MessageDAO {
     public Message updateMessageById(Message message, int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try {
-            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            String sql = "UPDATE message_text SET message_text = ? WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, message.getMessage_text());
             int rowsAffected = ps.executeUpdate();
@@ -115,7 +115,7 @@ public class MessageDAO {
         Connection conn = ConnectionUtil.getConnection();
         List<Message> userMessages = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM message WHERE posted_by = ?";
+            String sql = "SELECT message_text FROM message WHERE posted_by = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, posted_by);
             ResultSet rs = ps.executeQuery();
