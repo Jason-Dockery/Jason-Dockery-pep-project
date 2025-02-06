@@ -68,8 +68,9 @@ public class SocialMediaController {
             if(addedUserAccount != null){
                 context.json(addedUserAccount);
                 context.status(200);
-            }
+            } else {
                 context.status(400);
+            }
         }catch(Exception e){
             context.status(500);
         }
@@ -83,8 +84,9 @@ public class SocialMediaController {
             if(userAccount != null){
                 context.json(userAccount);
                 context.status(200);
-            }
+            } else {
                 context.status(401);
+            }
         }catch(Exception e){
             context.status(500);
         }
@@ -99,8 +101,9 @@ public class SocialMediaController {
             if(messageFeed != null){
                 context.json(messageFeed);
                 context.status(200);
-            }
+            } else {
                 context.status(400);
+            }
         }catch(Exception e){
             context.status(500);
         }
@@ -119,9 +122,9 @@ public class SocialMediaController {
         if(getMessage != null){
             context.json(getMessage);
             context.status(200);
-        }
+        } else {
             context.status(200);
-        }
+        }}
 
     //+
     private void deleteMessageByIdHandler(Context context) throws JsonProcessingException{
@@ -131,8 +134,9 @@ public class SocialMediaController {
             if(deletedMessage != null){
                 context.json(deletedMessage);
                 context.status(200);
-            }
+            } else {
                 context.status(200);
+            }
         }catch(Exception e){
             context.status(500);
         }
@@ -148,8 +152,9 @@ public class SocialMediaController {
             if(updatedMessage != null){
                 context.json(updatedMessage);
                 context.status(200);
-            }
+            } else {
                 context.status(400);
+            }
         }catch(Exception e){
             context.status(500);
         }

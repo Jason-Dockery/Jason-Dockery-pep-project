@@ -20,14 +20,14 @@ public class MessageService {
     }
 
     public Message addMessage(Message message){
-        //check message model and readme.md ##3 for requirements//&& messageDAO.insertMessage(Message message)
-        Message messageFeed = messageDAO.insertMessage(message); //fix this 1
+        //fix this 1//check message model and readme.md ##3 for requirements//&& messageDAO.insertMessage(Message message)
+         
         if(message.message_text.length() > 0 && 
            message.message_text.length() < 256 && 
            accountDAO.getAccountId(message.posted_by) != null
         ){
+            Message messageFeed = messageDAO.insertMessage(message);
             return messageFeed;
-        
         }
             return null;
     }

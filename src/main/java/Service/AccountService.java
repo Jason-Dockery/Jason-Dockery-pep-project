@@ -29,7 +29,7 @@ public class AccountService {
         
         if(account.getUsername().length() > 0 && 
            account.getPassword().length() >= 4 && 
-           actualAccount(account.getUsername()) //fix this
+           actualAccount(account.getUsername())
         ){
             Account addedUserAccount = accountDAO.addUserAccount(account);
             return addedUserAccount;

@@ -59,10 +59,10 @@ public class AccountDAO {
         Connection conn = ConnectionUtil.getConnection();
 
         try {
-            String sql = "SELECT (username, password) FROM account WHERE username = ? AND password = ?";
+            String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, account.getUsername());
-            ps.setString(1, account.getPassword());
+            ps.setString(2, account.getPassword());
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Account userAccount = new Account(
