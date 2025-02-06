@@ -19,14 +19,18 @@ import Service.MessageService;
  */
 public class SocialMediaController {
 
-    MessageService messageService;
-    AccountService accountService;
+    private MessageService messageService;
+    private AccountService accountService;
 
-    public SocialMediaController(MessageService messageService, AccountService accountService){
+    public SocialMediaController(){
         this.messageService = new MessageService();
         this.accountService = new AccountService();
     }
 
+    public SocialMediaController(MessageService messageService, AccountService accountService){
+        this.messageService = messageService;
+        this.accountService = accountService;
+    }
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -75,7 +79,7 @@ public class SocialMediaController {
         try{
             ObjectMapper om = new ObjectMapper();
             Account account = om.readValue(context.body(), Account.class);
-            Account userAccount = accountService.accountLogin(account.getUsername());
+            Account userAccount = accountService.accountLogin(account);
             if(userAccount != null){
                 context.json(userAccount);
                 context.status(200);
@@ -91,7 +95,7 @@ public class SocialMediaController {
         try{
             ObjectMapper om = new ObjectMapper();
             Message message = om.readValue(context.body(), Message.class);
-            Message messageFeed = messageService.addMessage(message.message_text, message, message.posted_by); //consider message.message_text
+            Message messageFeed = messageService.addMessage(message); //consider message.message_text
             if(messageFeed != null){
                 context.json(messageFeed);
                 context.status(200);
@@ -139,8 +143,8 @@ public class SocialMediaController {
             ObjectMapper om = new ObjectMapper();
             Message message = om.readValue(context.body(), Message.class);
             int message_id = Integer.parseInt(context.pathParam("message_id"));
-            int posted_by = Integer.parseInt(context.pathParam("message_id"));
-            Message updatedMessage = messageService.updateMessageById(message, message_id, posted_by); //consider just message or message, message_id
+            //int posted_by = Integer.parseInt(context.pathParam("message_id"));
+            Message updatedMessage = messageService.updateMessageById(message_id, message); //consider just message or message, message_id
             if(updatedMessage != null){
                 context.json(updatedMessage);
                 context.status(200);
@@ -152,11 +156,11 @@ public class SocialMediaController {
     }
 
     private void getAllMessagesByUserHandler(Context context) throws JsonProcessingException{
-        ObjectMapper om = new ObjectMapper();
-        Message message = om.readValue(context.body(), Message.class);
+        // ObjectMapper om = new ObjectMapper();
+        // Message message = om.readValue(context.body(), Message.class);
         //int message_id = Integer.parseInt(context.pathParam("message_id"));
-        int posted_by = Integer.parseInt(context.pathParam("posted_by"));
-        //context.json(messageService.getAllMessagesByUser());
+        int posted_by = Integer.parseInt(context.pathParam("account_id"));
+        context.json(messageService.getAllMessagesByUser(posted_by));
         context.status(200);
     }
 }

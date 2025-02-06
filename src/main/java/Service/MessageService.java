@@ -2,77 +2,70 @@ package Service;
 
 import java.util.List;
 
+import DAO.AccountDAO;
 import DAO.MessageDAO;
 import Model.Message;
 
 public class MessageService {
     MessageDAO messageDAO;
+    AccountDAO accountDAO;
 
     public MessageService(){
         messageDAO = new MessageDAO();
+        accountDAO = new AccountDAO();
     }
 
     public MessageService(MessageDAO messageDAO){
         this.messageDAO = messageDAO;
     }
 
-    public Message addMessage(String message_text, Message message, int posted_by){
+    public Message addMessage(Message message){
         //check message model and readme.md ##3 for requirements//&& messageDAO.insertMessage(Message message)
-        Message messageFeed = messageDAO.insertMessage(addMessage(message_text, message, posted_by)); //fix this 1
-        if(message_text.length() > 0 && 
-           message_text.length() < 256 && 
-           message.getPosted_by() == posted_by
+        Message messageFeed = messageDAO.insertMessage(message); //fix this 1
+        if(message.message_text.length() > 0 && 
+           message.message_text.length() < 256 && 
+           accountDAO.getAccountId(message.posted_by) != null
         ){
-            if(messageFeed != null){
-              return messageFeed;
-            }
+            return messageFeed;
+        
         }
             return null;
     }
 
     public List<Message> getAllMessages() {
         List<Message> allMessages = messageDAO.getAllMessages();
-        if(allMessages != null){
-            return allMessages;
-        }
-            return null;
+        return allMessages;
     }
 
     public Message getMessageById(int message_id){
         Message getMessage = messageDAO.getMessageById(message_id);
-        if(getMessage != null){
-            return getMessage;
-        }
-            return null;
+        return getMessage;
     }
     //~+
     public Message deleteMessageById(int message_id){
-        Message deletedMessage = messageDAO.deleteMessageById(message_id);
+        Message deletedMessage = messageDAO.getMessageById(message_id);
         if(deletedMessage != null){
+            messageDAO.deleteMessageById(message_id);
             return deletedMessage;
         }
             return null;
     }
     //~+
-    public Message updateMessageById(Message message, int message_id, int posted_by){
+    public Message updateMessageById(int message_id, Message message){
         //check message model and readme.md ##7 for requirements
-        Message updatedMessage = messageDAO.updateMessageById(message, message_id);// then fix this 2
+        // then fix this 2
         if(message.message_text.length() > 0 && 
            message.message_text.length() <= 255 && 
-           message.getPosted_by() == posted_by
+           messageDAO.getMessageById(message_id) != null
         ){
-            if(updatedMessage != null){
-                return updatedMessage;
-            }
+            messageDAO.updateMessageById(message_id, message);
+            return messageDAO.getMessageById(message_id);
         }
             return null;
     }
 
-    public List<Message> getAllMessagesByUser(Message message, int posted_by) {
+    public List<Message> getAllMessagesByUser(int posted_by) {
         List <Message> allMessagesOfUser = messageDAO.getAllMessagesByUser(posted_by);
-        if(allMessagesOfUser != null){
-            return allMessagesOfUser;
-        }
-        return null;
+        return allMessagesOfUser;
     }
 }
